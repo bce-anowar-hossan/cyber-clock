@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Photo Clock</title>
+    <style>
+        /* ব্যাকগ্রাউন্ডে আপনার পিকচার সেট করা হয়েছে */
+        body {
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            
+            /* এখানে আপনার ছবির নাম ও ফরম্যাট ঠিক থাকতে হবে */
+            background: url('my-pic.jpg') no-repeat center center/cover;
+            
+            font-family: 'Poppins', sans-serif;
+            overflow: hidden;
+            position: relative;
+        }
+
+        /* ছবির ওপর একটা হালকা ডার্ক ওভারলে (যা ছবিকে ফুটিয়ে তুলবে এবং ঘড়ি স্পষ্ট দেখাবে) */
+        body::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.4); /* ছবি বেশি উজ্জ্বল হলে 0.4 বাড়িয়ে 0.6 করতে পারেন */
+            z-index: 1;
+        }
+
+        /* গ্লাস-মরফিজম ঘড়ির বক্স (কাঁচের মতো ইফেক্ট) */
+        .clock-box {
+            position: relative;
+            z-index: 2; /* ওভারলের ওপরে রাখার জন্য */
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            padding: 40px 60px;
+            border-radius: 25px;
+            border: 1px solid rgba(255, 255, 255, 0.25);
+            box-shadow: 0 25px 45px rgba(0, 0, 0, 0.5);
+            text-align: center;
+        }
+
+        /* টাইম টেক্সট স্টাইল (সাইবার গ্লো লুক) */
+        .time-display {
+            font-size: 5rem;
+            font-weight: 700;
+            color: #ffffff;
+            letter-spacing: 3px;
+            /* চমৎকার গ্লোয়িং ইফেক্ট */
+            text-shadow: 0 0 10px rgba(255, 255, 255, 0.8),
+                         0 0 20px rgba(0, 242, 254, 0.8),
+                         0 0 30px rgba(0, 242, 254, 0.6);
+        }
+
+        /* তারিখের স্টাইল */
+        .date-display {
+            margin-top: 12px;
+            font-size: 1.2rem;
+            color: rgba(255, 255, 255, 0.9);
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            font-weight: 500;
+        }
+    </style>
+    <!-- গুগল ফন্ট -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@500;700&display=swap" rel="stylesheet">
+</head>
+<body>
+
+    <div class="clock-box">
+        <!-- সময় -->
+        <div id="clock" class="time-display">00:00:00 AM</div>
+        <!-- তারিখ -->
+        <div id="date" class="date-display">LOADING DATE...</div>
+    </div>
+
+    <script>
+        function updateClock() {
+            const now = new Date();
+            
+            // সময়
+            let hours = now.getHours();
+            let minutes = now.getMinutes();
+            let seconds = now.getSeconds();
+            let amPm = hours >= 12 ? 'PM' : 'AM';
+
+            hours = hours % 12;
+            hours = hours ? hours : 12; 
+
+            hours = hours < 10 ? '0' + hours : hours;
+            minutes = minutes < 10 ? '0' + minutes : minutes;
+            seconds = seconds < 10 ? '0' + seconds : seconds;
+
+            document.getElementById('clock').textContent = `${hours}:${minutes}:${seconds} ${amPm}`;
+
+            // তারিখ
+            const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+            const dateString = now.toLocaleDateString('en-US', options);
+            document.getElementById('date').textContent = dateString;
+        }
+
+        setInterval(updateClock, 1000);
+        updateClock();
+    </script>
+
+</body>
+</html>
